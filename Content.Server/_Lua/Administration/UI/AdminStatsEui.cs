@@ -4,12 +4,10 @@
 using Content.Server._Lua.Shuttles.Components;
 using Content.Server._Lua.Stargate.Components;
 using Content.Server._NF.CryoSleep;
-using Content.Server._NF.Worldgen.Components.Debris;
 using Content.Server.Administration.Managers;
 using Content.Server.EUI;
 using Content.Server.NPC.HTN;
 using Content.Server.Shuttles.Components;
-using Content.Server.Worldgen.Components.GC;
 using Content.Shared._Lua.Administration.AdminStats;
 using Content.Shared._NF.Shipyard.Components;
 using Content.Shared.Administration;
@@ -106,7 +104,7 @@ public sealed class AdminStatsEui : BaseEui
         _cachedState.NpcActive = 0;
         _cachedState.NpcSleeping = 0;
         _cachedState.NpcTotal = 0;
-        var htnQuery = _entMan.EntityQueryEnumerator<HTNComponent>();
+        var htnQuery = _entMan.AllEntityQueryEnumerator<HTNComponent>();
         while (htnQuery.MoveNext(out var uid, out _))
         {
             _cachedState.NpcTotal++;
@@ -120,7 +118,7 @@ public sealed class AdminStatsEui : BaseEui
         _cachedState.ShuttlesActive = 0;
         _cachedState.ShuttlesPaused = 0;
         _cachedState.ShuttlesTotal = 0;
-        var query = _entMan.EntityQueryEnumerator<ShuttleComponent, ShuttleDeedComponent, MapGridComponent>();
+        var query = _entMan.AllEntityQueryEnumerator<ShuttleComponent, ShuttleDeedComponent, MapGridComponent>();
         while (query.MoveNext(out var uid, out _, out _, out _))
         {
             _cachedState.ShuttlesTotal++;
@@ -133,11 +131,13 @@ public sealed class AdminStatsEui : BaseEui
     {
         _cachedState.DebrisCount = 0;
         _cachedState.WrecksCount = 0;
-        var debrisQuery = _entMan.EntityQueryEnumerator<SpaceDebrisComponent>();
-        while (debrisQuery.MoveNext(out _, out _)) _cachedState.DebrisCount++;
-        var gcQuery = _entMan.EntityQueryEnumerator<GCAbleObjectComponent>();
-        while (gcQuery.MoveNext(out var uid, out _))
-        { if (!_entMan.HasComponent<SpaceDebrisComponent>(uid)) _cachedState.WrecksCount++; }
+        var query = _entMan.AllEntityQueryEnumerator<MapGridComponent, MetaDataComponent>();
+        while (query.MoveNext(out _, out _, out var meta))
+        {
+            var name = meta.EntityName;
+            if (name.Contains("[Астероид]")) _cachedState.DebrisCount++;
+            else if (name.Contains("[Обломок]")) _cachedState.WrecksCount++;
+        }
         _cachedState.DebrisTotalCount = _cachedState.DebrisCount + _cachedState.WrecksCount;
     }
 
@@ -146,10 +146,10 @@ public sealed class AdminStatsEui : BaseEui
         _cachedState.PlayersAlive = 0;
         _cachedState.PlayersDead = 0;
         _cachedState.PlayersInCryo = 0;
-        var aliveQuery = _entMan.EntityQueryEnumerator<ActorComponent, MobStateComponent>();
+        var aliveQuery = _entMan.AllEntityQueryEnumerator<ActorComponent, MobStateComponent>();
         while (aliveQuery.MoveNext(out _, out _, out var aliveMob))
         { if (aliveMob.CurrentState is MobState.Alive or MobState.Critical) _cachedState.PlayersAlive++; }
-        var deadQuery = _entMan.EntityQueryEnumerator<MindContainerComponent, MobStateComponent>();
+        var deadQuery = _entMan.AllEntityQueryEnumerator<MindContainerComponent, MobStateComponent>();
         while (deadQuery.MoveNext(out _, out _, out var deadMob))
         { if (deadMob.CurrentState == MobState.Dead) _cachedState.PlayersDead++; }
         var cryoSystem = _entMan.System<CryoSleepSystem>();
@@ -161,7 +161,7 @@ public sealed class AdminStatsEui : BaseEui
         _cachedState.StargateMapsActive = 0;
         _cachedState.StargateMapsFrozen = 0;
         _cachedState.StargateMapsTotal = 0;
-        var query = _entMan.EntityQueryEnumerator<StargateDestinationComponent>();
+        var query = _entMan.AllEntityQueryEnumerator<StargateDestinationComponent>();
         while (query.MoveNext(out _, out var dest))
         {
             _cachedState.StargateMapsTotal++;
