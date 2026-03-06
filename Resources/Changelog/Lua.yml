@@ -3529,3 +3529,10 @@ Entries:
   id: 244
   time: '2026-03-06T02:55:35.0000000+00:00'
   url: https://github.com/Lua-Frontier/sector-frontier-14/pull/489
+- author: KiraFaust
+  changes:
+    - type: Fix
+      message: Исправлен спрайт шлема скафандра Научного Руководителя
+  id: 245
+  time: '2026-03-06T02:58:27.0000000+00:00'
+  url: https://github.com/Lua-Frontier/sector-frontier-14/pull/488
