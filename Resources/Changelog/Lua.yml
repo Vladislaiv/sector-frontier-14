@@ -3565,3 +3565,10 @@ Entries:
   id: 248
   time: '2026-03-09T12:20:14.0000000+00:00'
   url: https://github.com/Lua-Frontier/sector-frontier-14/pull/493
+- author: Vecortys
+  changes:
+    - type: Add
+      message: Портировано расширенное описание персонажа. Скриншоты в ПРе.
+  id: 249
+  time: '2026-03-09T13:41:36.0000000+00:00'
+  url: https://github.com/Lua-Frontier/sector-frontier-14/pull/495
