@@ -3581,3 +3581,16 @@ Entries:
   id: 250
   time: '2026-03-09T14:30:16.0000000+00:00'
   url: https://github.com/Lua-Frontier/sector-frontier-14/pull/497
+- author: HacksLua
+  changes:
+    - type: Remove
+      message: >-
+        Удален механизм из-за которого разлетались вещи по шаттлу от
+        столкновений
+    - type: Remove
+      message: Удален отсек ЭП
+    - type: Tweak
+      message: Джетпаки ускорены
+  id: 251
+  time: '2026-03-10T11:38:33.0000000+00:00'
+  url: https://github.com/Lua-Frontier/sector-frontier-14/pull/501
